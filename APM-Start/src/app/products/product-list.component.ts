@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IProduct } from "./product";
+import { ProductService } from "./product.service";
 
 @Component({
     selector: 'pm-products',
@@ -11,6 +12,8 @@ export class ProductListComponent implements OnInit{
     imageWidth: number = 50;
     imageMargin:number = 2;
     showImage:boolean = false;
+    errorMessage: string;
+
     _listFilter: string = 'cart';
     get listFilter(): string {
         return this._listFilter;
@@ -20,34 +23,13 @@ export class ProductListComponent implements OnInit{
         this.filterProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
     }
     filterProducts: IProduct[];
-    products: IProduct[] = [
-        {
-            "productId": 2,
-            "productName": "Garden Cart",
-            "productCode": "GDN-0023",
-            "releaseDate": "March 18, 2016",
-            "description": "15 gallon capacity rolling garden cart",
-            "price": 32.99,
-            "starRating": 4.2,
-            "imageUrl": "https://openclipart.org/image/300px/svg_to_png/58471/garden_cart.png"
-          },
-          {
-            "productId": 5,
-            "productName": "Hammer",
-            "productCode": "TBX-0048",
-            "releaseDate": "May 21, 2016",
-            "description": "Curved claw steel hammer",
-            "price": 8.9,
-            "starRating": 4.8,
-            "imageUrl": "https://openclipart.org/image/300px/svg_to_png/73/rejon_Hammer.png"
-          }    
-    ];
+    products: IProduct[] = [];
 
-    constructor(){
-        this.filterProducts = this.products;
-        this.listFilter = 'cart';
+    constructor(private productService: ProductService) {
     }
-
+    onRatingClicked(message: string): void {
+        this.pageTitle = 'Product List: ' + message;
+    }
     performFilter(filterBy: string): IProduct[] {
         filterBy = filterBy.toLocaleLowerCase();
         return this.products.filter((product: IProduct) =>
@@ -57,6 +39,12 @@ export class ProductListComponent implements OnInit{
         this.showImage = !this.showImage;
     }
     ngOnInit(): void {
-        console.log('In OnInit');
+        this.productService.getProducts().subscribe(
+            products => {
+                this.products = products;
+                this.filterProducts = this.products;
+            },
+            error => this.errorMessage = <any>error
+        );
     }
 }
