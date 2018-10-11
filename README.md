@@ -1,3 +1,8 @@
+# Angular playground
+Followed along with Deborah's course on pluralsight to learn some of the basics with Angular. This repo doubles as an initial learning tool and a future reference.
+
+
+
 # Angular-Getting Started
 Materials for the ["Angular: Getting Started"](http://bit.ly/Angular-GettingStarted) course on Pluralsight.
 
